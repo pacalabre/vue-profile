@@ -1,6 +1,6 @@
 <template>
-  <div id="app">
-    <About :name='userProfile.name' :picture='userProfile.picture' :bio='userProfile.bio' />
+  <div id="app" class="profile-container">
+    <About class="about-component" :name='userProfile.name' :picture='userProfile.picture' :bio='userProfile.bio' />
     <Experience :experience='userProfile.experience' />
   </div>
 </template>
@@ -34,12 +34,24 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
+  body {
+    margin: 0;
+  }
+
+  #app {
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+  }
+
+  .profile-container {
+    display: flex;
+  }
+
+  .about-component {
+    width: 75%;
+  }
 </style>
