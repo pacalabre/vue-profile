@@ -1,18 +1,36 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <About />
+    <Experience />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import About from './components/About.vue'
+import Experience from './components/Experience.vue'
+import ProfileService from './services/ProfileService'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
-  }
+    About,
+    Experience
+  },
+  data() {
+    return {
+      userProfile: {}
+    }
+  },
+  created() {
+      ProfileService.getProfile()
+      .then(res => {
+        console.log("service res", res);
+        this.userProfile = res.data[0];
+      })
+      .catch(err => {
+        console.log("there was an error ", err);
+      })
+  },
 }
 </script>
 
