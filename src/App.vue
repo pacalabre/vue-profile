@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <About />
-    <Experience />
+    <About :name='userProfile.name' :picture='userProfile.picture' :bio='userProfile.bio' />
+    <Experience :experience='userProfile.experience' />
   </div>
 </template>
 
@@ -24,7 +24,6 @@ export default {
   created() {
       ProfileService.getProfile()
       .then(res => {
-        console.log("service res", res);
         this.userProfile = res.data[0];
       })
       .catch(err => {
