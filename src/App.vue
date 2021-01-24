@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="profile-container">
     <About class="about-component" :name='userProfile.name' :picture='userProfile.picture' :bio='userProfile.bio' />
-    <Experience :experience='userProfile.experience' @newExperience="updateExperience" />
+    <Experience :experience='userProfile.experience' @newExperience="addNewExperience" @updatedExperience="updateExperience" />
   </div>
 </template>
 
@@ -18,26 +18,41 @@ export default {
   },
   data() {
     return {
-      userProfile: {}
+      userProfile: {},
+      nextId: Number
     }
   },
   created() {
       ProfileService.getProfile()
       .then(res => {
         this.userProfile = res.data[0];
+        this.userProfile.experience.forEach((item, i) => {
+          item.id = i + 1;
+        });
+        this.nextId = this.userProfile.experience.length+1;
       })
       .catch(err => {
         console.log("there was an error ", err);
       })
   },
   methods: {
-    updateExperience(newExperience) {
+    addNewExperience(newExperience) {
+      newExperience.id = this.nextId;
+      this.nextId++;
       this.userProfile.experience.push(newExperience);
       ProfileService.updateExperince(this.userProfile)
       .catch(err => {
         console.log(err);
       })
-    }
+    },
+    updateExperience(updatedExperience) {
+      console.log("updating", updatedExperience);
+      ProfileService.updateExperince(this.userProfile)
+      .catch(err => {
+        console.log(err);
+      })
+    },
+
   }
 }
 </script>

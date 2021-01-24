@@ -1,9 +1,10 @@
 <template>
     <main class="main">
-        <section v-show="addingExperience === false && editingExperience === false" class="experience-section">
+        <section v-show="isAddingExperience === false && isEditingExperience === false" class="experience-section">
             <h2 class="experience=section-title">Experience</h2>
             <ul class="experience-list">
                 <li class="experience-list-item" v-for="(role, index) in experience" :key="index">
+                    <button @click="editExperience(index)">edit</button>
                     <h3 class="experience-company">{{role.company}}</h3>
                     <div class="experience-title-dates-container">
                         <h4>{{role.title}}</h4>
@@ -14,7 +15,7 @@
             </ul>
             <button @click="addExperience()">Add Experience</button>
         </section>
-        <section v-show="addingExperience === true" class="add-experience-section">
+        <section v-show="isAddingExperience === true" class="add-experience-section">
             <h2>Add Experience</h2>
             <form class="add-experience-section-form">
                 <label>Company</label>
@@ -25,8 +26,23 @@
                 <input v-model="newExperience.yearStart"/> to <input v-model="newExperience.yearEnd"/>
                 <label>description</label>
                 <textarea v-model="newExperience.description"></textarea>
-                <button @click="saveExperience($event)">Save</button>
+                <button @click="saveNewExperience($event)">Save</button>
                 <button @click="cancelAddExperience($event)">Cancel</button>
+            </form>
+        </section>
+        <section v-show="isEditingExperience === true" class="edit-experience-section">
+            <h2>Edit Experience</h2>
+            <form class="edit-experience-section-form">
+                <label>Company</label>
+                <input v-model="selectedExperience.company"/>
+                <label>Title</label>
+                <input v-model="selectedExperience.title"/>
+                <label>Years</label>
+                <input v-model="selectedExperience.yearStart"/> to <input v-model="selectedExperience.yearEnd"/>
+                <label>description</label>
+                <textarea v-model="selectedExperience.description"></textarea>
+                <button @click="UpdateExperience($event)">Save</button>
+                <button @click="cancelEditExperience($event)">Cancel</button>
             </form>
         </section>
     </main>
@@ -36,16 +52,17 @@
 export default {
     data() {
         return {
-            addingExperience: false,
-            editingExperience: false,
-            yearStart:"",
-            yearEnd: "",
+            isAddingExperience: false,
+            isEditingExperience: false,
             newExperience: {
                 company: "",
                 title: "",
                 description: "",
-
-            }
+                yearStart:"",
+                yearEnd: ""
+            },
+            selectedIndex: Number,
+            selectedExperience: {}
         }
     },
     props: {
@@ -53,17 +70,34 @@ export default {
     },
     methods: {
         addExperience() {
-            this.addingExperience = true;
+            this.isAddingExperience = true;
         },
-        saveExperience(event) {
+        saveNewExperience(event) {
             event.preventDefault();
             this.$emit('newExperience',this.newExperience);
-            this.addingExperience = false;
+            this.newExperience = {};
+            this.isAddingExperience = false;
         },
         cancelAddExperience(event) {
             event.preventDefault();
-            this.addingExperience = false;
-        }
+            this.isAddingExperience = false;
+        },
+        editExperience(index) {
+            this.isEditingExperience = true;
+            this.selectedIndex = index;
+            this.selectedExperience = this.$props.experience[index];
+            console.log(this.$props.experience[index]);
+        },
+        UpdateExperience(event){
+            event.preventDefault();
+            this.$emit('updatedExperience', this.selectedExperience);
+            this.selectedExperience = {};
+            this.isEditingExperience = false;
+        },
+        cancelEditExperience(event) {
+            event.preventDefault();
+            this.isEditingExperience = false;
+        },
     }
 }
 </script>
