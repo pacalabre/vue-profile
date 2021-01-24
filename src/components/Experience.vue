@@ -126,21 +126,31 @@ export default {
         },
         cancelAddExperience(event) {
             event.preventDefault();
+            this.resetNewExperienceForm();
             this.isAddingExperience = false;
         },
         editExperience(index) {
             this.isEditingExperience = true;
             this.selectedIndex = index;
-            this.selectedExperience = this.$props.experience[index];
+            this.selectedExperience = {
+                company: this.$props.experience[index].company,
+                dates: this.$props.experience[index].dates,
+                description: this.$props.experience[index].description,
+                id: this.$props.experience[index].id,
+                title: this.$props.experience[index].title,
+            }
         },
         UpdateExperience(event){
             event.preventDefault();
+            this.$emit('selectedIndexToParent', this.selectedIndex)
             this.$emit('updatedExperience', this.selectedExperience);
+
             this.selectedExperience = {};
             this.isEditingExperience = false;
         },
         cancelEditExperience(event) {
             event.preventDefault();
+            this.selectedExperience = {};
             this.isEditingExperience = false;
         },
 

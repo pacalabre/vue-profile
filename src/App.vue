@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="profile-container">
     <About class="about-component" :name='userProfile.name' :picture='userProfile.picture' :bio='userProfile.bio' />
-    <Experience :experience='userProfile.experience' @newExperience="addNewExperience" @updatedExperience="updateExperience" />
+    <Experience :experience='userProfile.experience' @newExperience="addNewExperience" @updatedExperience="updateExperience($event)" @selectedIndexToParent="indexToUpdate($event)" />
   </div>
 </template>
 
@@ -19,31 +19,49 @@ export default {
   data() {
     return {
       userProfile: {},
+      nextId: Number,
+      updateIndexVal: Number
     }
   },
   created() {
       ProfileService.getProfile()
       .then(res => {
         this.userProfile = res.data[0];
+        this.userProfile.experience.forEach((item, i) => {
+          item.id = i + 1;
+        });
+        this.nextId = this.userProfile.experience.length+1;
       })
       .catch(err => {
         console.log("there was an error ", err);
       })
+
+
   },
   methods: {
     addNewExperience(newExperience) {
+      newExperience.id = this.nextId;
+      this.nextId++;
       this.userProfile.experience.push(newExperience);
       ProfileService.updateExperince(this.userProfile)
       .catch(err => {
         console.log(err);
       })
     },
-    updateExperience() {
+    updateExperience(event) {
+      console.log("the experience",this.userProfile.experience[this.updateIndexVal]);
+      console.log("data", event)
+      this.userProfile.experience[this.updateIndexVal] = {...this.userProfile.experience[this.updateIndexVal], ...event};
+      
       ProfileService.updateExperince(this.userProfile)
       .catch(err => {
         console.log(err);
       })
     },
+    indexToUpdate(event) {
+      console.log(event);
+      this.updateIndexVal = event;
+    }
 
   }
 }
