@@ -49,10 +49,7 @@ export default {
       })
     },
     updateExperience(event) {
-      console.log("the experience",this.userProfile.experience[this.updateIndexVal]);
-      console.log("data", event)
       this.userProfile.experience[this.updateIndexVal] = {...this.userProfile.experience[this.updateIndexVal], ...event};
-      
       ProfileService.updateExperince(this.userProfile)
       .catch(err => {
         console.log(err);
