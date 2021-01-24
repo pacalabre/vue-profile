@@ -8,7 +8,7 @@
                     <h3 class="experience-company">{{role.company}}</h3>
                     <div class="experience-title-dates-container">
                         <h4>{{role.title}}</h4>
-                        <p>{{role.dates}}</p>
+                        <p>{{role.dates}}<span v-if="role.dates && role.dates.length === 5">Current</span></p>
                     </div>
                     <p class="experience-description">{{role.description}}</p>
                 </li>
@@ -60,12 +60,14 @@ export default {
             isAddingExperience: false,
             isEditingExperience: false,
             formSubmitAttempt: false,
+            buildString: "",
             newExperience: {
                 company: "",
                 title: "",
                 description: "",
                 yearStart:"",
-                yearEnd: ""
+                yearEnd: "",
+                dates: "",
             },
             selectedIndex: Number,
             selectedExperience: {},
@@ -73,6 +75,15 @@ export default {
     },
     props: {
         experience: Array
+    },
+    watch: {
+        newExperience: {
+            handler: function(after) {
+                this.newExperience.dates = `${after.yearStart}|${after.yearEnd}`
+            },
+            deep: true
+            
+        } 
     },
     computed: {
         missingYearStart: function () {
@@ -82,6 +93,9 @@ export default {
             return isNaN(this.newExperience.yearStart); 
         },
         yearStartMustBeFourDigits: function () {
+            return this.newExperience.yearStart.length !== 4;
+        },
+        yearEndMissing: function () {
             return this.newExperience.yearStart.length !== 4;
         },
   },
@@ -95,14 +109,18 @@ export default {
                 this.formSubmitAttempt = true;
                 return;
             }
-            if(this.newExperience.yearEnd === "") {
-                this.newExperience.yearEnd = "Current";
-            }
             this.$emit('newExperience',this.newExperience);
             this.resetNewExperienceForm();
         },
         resetNewExperienceForm() {
-            this.newExperience = {};
+            this.newExperience = {
+                company: "",
+                title: "",
+                description: "",
+                yearStart:"",
+                yearEnd: "",
+                dates: "",
+            };
             this.isAddingExperience = false;
             this.formSubmitAttempt = false;
         },
