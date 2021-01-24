@@ -4,7 +4,7 @@
             <h2 class="experience=section-title">Experience</h2>
             <ul class="experience-list">
                 <li class="experience-list-item" v-for="(role, index) in experience" :key="index">
-                    <button @click="editExperience(index)">edit</button>
+                    <button class="experience-btn-edit" @click="editExperience(index)">edit</button>
                     <h3 class="experience-company">{{role.company}}</h3>
                     <div class="experience-title-dates-container">
                         <h4>{{role.title}}</h4>
@@ -13,41 +13,50 @@
                     <p class="experience-description">{{role.description}}</p>
                 </li>
             </ul>
-            <button @click="addExperience()">Add Experience</button>
+            <button class="form-btn add-experience-btn" @click="addExperience()">Add Experience</button>
         </section>
         <section v-show="isAddingExperience === true" class="add-experience-section">
             <h2>Add Experience</h2>
             <form class="add-experience-section-form">
-                <label>Company</label>
+                <label class="form-label">Company</label>
                 <input v-model="newExperience.company"/>
-                <label>Title</label>
+                <label class="form-label">Title</label>
                 <input v-model="newExperience.title"/>
-                <label>Years</label>
+                <label class="form-label">Year Start</label>
                 <input v-model="newExperience.yearStart"/>
-                <span v-if="formSubmitAttempt && missingYearStart">This field is required</span>
-                <span v-else-if="formSubmitAttempt && yearStartNotNums">Only Numbers are allowed</span>
-                <span v-else-if="formSubmitAttempt && yearStartMustBeFourDigits">This field must contain 4 digits</span>
-                 to 
-                 <input v-model="newExperience.yearEnd"/>
-                <label>description</label>
+                <span class="form-warning" v-if="formSubmitAttempt && missingYearStartAddExp">This field is required</span>
+                <span class="form-warning" v-else-if="formSubmitAttempt && yearStartNotNumsAddExp">Only Numbers are allowed</span>
+                <span class="form-warning" v-else-if="formSubmitAttempt && yearStartMustBeFourDigitsAddExp">This field must contain 4 digits</span>
+                <label class="form-label">Year End</label>
+                <input v-model="newExperience.yearEnd"/>
+                <label class="form-label">Description</label>
                 <textarea v-model="newExperience.description"></textarea>
-                <button @click="saveNewExperience($event)">Save</button>
-                <button @click="cancelAddExperience($event)">Cancel</button>
+                <div class="form-btn-container">
+                    <button class="form-btn" @click="saveNewExperience($event)">Save</button>
+                    <button class="form-btn form-btn-cancel" @click="cancelAddExperience($event)">Cancel</button>
+                </div>
             </form>
         </section>
         <section v-show="isEditingExperience === true" class="edit-experience-section">
             <h2>Edit Experience</h2>
             <form class="edit-experience-section-form">
-                <label>Company</label>
+                <label class="form-label">Company</label>
                 <input v-model="selectedExperience.company"/>
-                <label>Title</label>
+                <label class="form-label">Title</label>
                 <input v-model="selectedExperience.title"/>
-                <label>Years</label>
-                <input v-model="selectedExperience.yearStart"/> to <input v-model="selectedExperience.yearEnd"/>
-                <label>description</label>
+                <label class="form-label">Year Start</label>
+                <span class="form-warning" v-if="formSubmitAttempt && missingYearStartEditExp">This field is required</span>
+                <span class="form-warning" v-else-if="formSubmitAttempt && yearStartNotNumsEditExp">Only Numbers are allowed</span>
+                <span class="form-warning" v-else-if="formSubmitAttempt && yearStartMustBeFourDigitsEditExp">This field must contain 4 digits</span>
+                <input v-model="selectedExperience.yearStart"/>
+                <label class="form-label">Year End</label>
+                <input v-model="selectedExperience.yearEnd"/>
+                <label class="form-label">description</label>
                 <textarea v-model="selectedExperience.description"></textarea>
-                <button @click="UpdateExperience($event)">Save</button>
-                <button @click="cancelEditExperience($event)">Cancel</button>
+                <div class="form-btn-container">
+                    <button class="form-btn" @click="UpdateExperience($event)">Save</button>
+                    <button class="form-btn form-btn-cancel" @click="cancelEditExperience($event)">Cancel</button>
+                </div>
             </form>
         </section>
     </main>
@@ -70,7 +79,14 @@ export default {
                 dates: "",
             },
             selectedIndex: Number,
-            selectedExperience: {},
+            selectedExperience: {
+                company: "",
+                title: "",
+                description: "",
+                yearStart:"",
+                yearEnd: "",
+                dates: "",
+            },
         }
     },
     props: {
@@ -82,21 +98,32 @@ export default {
                 this.newExperience.dates = `${after.yearStart}|${after.yearEnd}`
             },
             deep: true
-            
-        } 
+        },
+        selectedExperience: {
+            handler: function(after) {
+                this.selectedExperience.dates = `${after.yearStart}${after.yearEnd}`
+            },
+            deep: true
+        },
     },
     computed: {
-        missingYearStart: function () {
-            return this.newExperience.yearStart === ""; 
+        missingYearStartAddExp: function () {
+            return this.newExperience.yearStart === "" ; 
         },
-        yearStartNotNums: function () {
+        yearStartNotNumsAddExp: function () {
             return isNaN(this.newExperience.yearStart); 
         },
-        yearStartMustBeFourDigits: function () {
+        yearStartMustBeFourDigitsAddExp: function () {
             return this.newExperience.yearStart.length !== 4;
         },
-        yearEndMissing: function () {
-            return this.newExperience.yearStart.length !== 4;
+        missingYearStartEditExp: function () {
+            return this.selectedExperience.yearStart === "" ; 
+        },
+        yearStartNotNumsEditExp: function () {
+            return isNaN(this.selectedExperience.yearStart); 
+        },
+        yearStartMustBeFourDigitsEditExp: function () {
+            return this.selectedExperience.yearStart.length !== 4;
         },
   },
     methods: {
@@ -105,7 +132,7 @@ export default {
         },
         saveNewExperience(event) {
             event.preventDefault();
-            if(this.missingYearStart || this.yearStartNotNums || this.yearStartMustBeFourDigits) {
+            if(this.missingYearStartAddExp || this.yearStartNotNumsAddExp || this.yearStartMustBeFourDigitsAddExp) {
                 this.formSubmitAttempt = true;
                 return;
             }
@@ -138,10 +165,16 @@ export default {
                 description: this.$props.experience[index].description,
                 id: this.$props.experience[index].id,
                 title: this.$props.experience[index].title,
+                yearStart:"",
+                yearEnd: "",
             }
         },
         UpdateExperience(event){
             event.preventDefault();
+            if(this.missingYearStartEditExp || this.yearStartNotNumsEditExp || this.yearStartMustBeFourDigitsEditExp) {
+                this.formSubmitAttempt = true;
+                return;
+            }
             this.$emit('selectedIndexToParent', this.selectedIndex)
             this.$emit('updatedExperience', this.selectedExperience);
 
@@ -160,26 +193,33 @@ export default {
 
 <style scoped>
 
+
+.main {
+    width: 100%;
+}
+
 .experience-section, .main {
-    background: white;
     display: flex;
     flex-direction: column;
-    margin: auto;
+    margin: 20px auto;
 }
 
 .experience-list {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    padding-left: 0;
 }
 
 .experience-list-item {
     display: flex;
     flex-direction: column;
     list-style: none;
-    border-bottom: 2px solid rgb(230, 229, 229);
-    padding: 0 20px;
-    max-width: 600px;
+    max-width: 700px;
+    background: white;
+    margin: 20px;
+    padding: 10px 25px;
+    border-radius: 8px;
 }
 
 .experience-title-dates-container {
@@ -191,11 +231,86 @@ export default {
 
 .experience-company, .experience-description {
     text-align: left;
+    margin-bottom: 15px;
 }
 
-.add-experience-section-form {
+.experience-description {
+    margin-top: 15px;
+}
+
+.experience-btn-edit {
+    align-self: flex-end;
+    background: transparent;
+    border-color: transparent;
+    color: white;
+    font-size: 14px;
+    color: #2573db;
+}
+
+.add-experience-section, .edit-experience-section {
     display: flex;
     flex-direction: column;
+    width: 100%;
+    max-width: 700px;
+    margin: 80px auto;
+    height: 100vh;
+}
+
+.add-experience-section-form, .edit-experience-section-form {
+    display: flex;
+    flex-direction: column;
+    max-width: 500px;
+    align-self: center;
+    width: 90%;
+}
+
+.add-experience-btn {
+    align-self: center;
+    margin: 15px auto;
+}
+
+.form-btn-container {
+    margin-top: 20px;
+}
+
+.form-btn {
+    background: #2573db;
+    color: white;
+    font-size: 20px;
+    max-width: 175px;
+    border-radius: .5rem;
+    border: none;
+    padding: 8px 16px;
+    margin: 0 5px;
+}
+
+.form-label {
+    align-self: baseline;
+    margin-top: 15px;
+}
+
+.form-btn-cancel {
+    background: transparent;
+    border: #2573db solid thin;
+    color: #2573db;
+}
+
+.form-warning {
+    color: red;
+}
+
+.form-btn:hover {
+    background: #3089ff;
+}
+
+.form-btn-cancel:hover {
+    background: #2573db;
+    border: #2573db solid thin;
+    color: white;
+}
+
+.experience-btn-edit:hover {
+    cursor: pointer;
 }
 
 </style>

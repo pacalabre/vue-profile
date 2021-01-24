@@ -66,8 +66,11 @@ export default {
 
 <style>
 
+@import url('https://fonts.googleapis.com/css2?family=Average+Sans&display=swap');
+
   body {
     margin: 0;
+    background: #edf1f3;
   }
 
   #app {
@@ -76,13 +79,37 @@ export default {
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
+
+  }
+
+  h1,h2,h3,h4,h5,h6,a,button,p {
+    font-family: 'Average Sans', sans-serif;
+    /* margin: 0;
+    padding: 0; */
+  }
+
+  input {
+    height: 25px;
+    border: transparent;
+  }
+
+  textarea { 
+    height: 100px;
+    border: transparent;
   }
 
   .profile-container {
     display: flex;
+    flex-direction: column;
   }
 
-  .about-component {
-    width: 75%;
+  @media screen and (min-width: 768px) {
+    .profile-container {
+      flex-direction: row;
+    }
+
+    .about-component {
+      width: 75%;
+    }
   }
 </style>
