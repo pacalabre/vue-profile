@@ -23,7 +23,12 @@
                 <label>Title</label>
                 <input v-model="newExperience.title"/>
                 <label>Years</label>
-                <input v-model="newExperience.yearStart"/> to <input v-model="newExperience.yearEnd"/>
+                <input v-model="newExperience.yearStart"/>
+                <span v-if="formSubmitAttempt && missingYearStart">This field is required</span>
+                <span v-else-if="formSubmitAttempt && yearStartNotNums">Only Numbers are allowed</span>
+                <span v-else-if="formSubmitAttempt && yearStartMustBeFourDigits">This field must contain 4 digits</span>
+                 to 
+                 <input v-model="newExperience.yearEnd"/>
                 <label>description</label>
                 <textarea v-model="newExperience.description"></textarea>
                 <button @click="saveNewExperience($event)">Save</button>
@@ -54,6 +59,7 @@ export default {
         return {
             isAddingExperience: false,
             isEditingExperience: false,
+            formSubmitAttempt: false,
             newExperience: {
                 company: "",
                 title: "",
@@ -62,21 +68,43 @@ export default {
                 yearEnd: ""
             },
             selectedIndex: Number,
-            selectedExperience: {}
+            selectedExperience: {},
         }
     },
     props: {
         experience: Array
     },
+    computed: {
+        missingYearStart: function () {
+            return this.newExperience.yearStart === ""; 
+        },
+        yearStartNotNums: function () {
+            return isNaN(this.newExperience.yearStart); 
+        },
+        yearStartMustBeFourDigits: function () {
+            return this.newExperience.yearStart.length !== 4;
+        },
+  },
     methods: {
         addExperience() {
             this.isAddingExperience = true;
         },
         saveNewExperience(event) {
             event.preventDefault();
+            if(this.missingYearStart || this.yearStartNotNums || this.yearStartMustBeFourDigits) {
+                this.formSubmitAttempt = true;
+                return;
+            }
+            if(this.newExperience.yearEnd === "") {
+                this.newExperience.yearEnd = "Current";
+            }
             this.$emit('newExperience',this.newExperience);
+            this.resetNewExperienceForm();
+        },
+        resetNewExperienceForm() {
             this.newExperience = {};
             this.isAddingExperience = false;
+            this.formSubmitAttempt = false;
         },
         cancelAddExperience(event) {
             event.preventDefault();
@@ -97,6 +125,7 @@ export default {
             event.preventDefault();
             this.isEditingExperience = false;
         },
+
     }
 }
 </script>
