@@ -86,7 +86,6 @@ export default {
             this.isEditingExperience = true;
             this.selectedIndex = index;
             this.selectedExperience = this.$props.experience[index];
-            console.log(this.$props.experience[index]);
         },
         UpdateExperience(event){
             event.preventDefault();

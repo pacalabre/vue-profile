@@ -19,17 +19,12 @@ export default {
   data() {
     return {
       userProfile: {},
-      nextId: Number
     }
   },
   created() {
       ProfileService.getProfile()
       .then(res => {
         this.userProfile = res.data[0];
-        this.userProfile.experience.forEach((item, i) => {
-          item.id = i + 1;
-        });
-        this.nextId = this.userProfile.experience.length+1;
       })
       .catch(err => {
         console.log("there was an error ", err);
@@ -37,16 +32,13 @@ export default {
   },
   methods: {
     addNewExperience(newExperience) {
-      newExperience.id = this.nextId;
-      this.nextId++;
       this.userProfile.experience.push(newExperience);
       ProfileService.updateExperince(this.userProfile)
       .catch(err => {
         console.log(err);
       })
     },
-    updateExperience(updatedExperience) {
-      console.log("updating", updatedExperience);
+    updateExperience() {
       ProfileService.updateExperince(this.userProfile)
       .catch(err => {
         console.log(err);
