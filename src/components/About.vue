@@ -25,6 +25,7 @@ export default {
         flex-direction: column;
         height: 100vh;
         overflow: scroll;
+        max-width: 400px;
     }
 
     .bio-sidebar-img {

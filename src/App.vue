@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="profile-container">
     <About class="about-component" :name='userProfile.name' :picture='userProfile.picture' :bio='userProfile.bio' />
-    <Experience :experience='userProfile.experience' />
+    <Experience :experience='userProfile.experience' @newExperience="updateExperience" />
   </div>
 </template>
 
@@ -30,6 +30,15 @@ export default {
         console.log("there was an error ", err);
       })
   },
+  methods: {
+    updateExperience(newExperience) {
+      this.userProfile.experience.push(newExperience);
+      ProfileService.updateExperince(this.userProfile)
+      .catch(err => {
+        console.log(err);
+      })
+    }
+  }
 }
 </script>
 

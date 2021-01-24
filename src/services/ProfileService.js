@@ -14,7 +14,7 @@ export default {
         return apiClient.get('/profile')
     },
 
-    updateExperince(){
-        return apiClient.post('/profile')
+    updateExperince(request){
+        return apiClient.post('/profile', request)
     }
 }
