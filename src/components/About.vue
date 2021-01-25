@@ -2,7 +2,6 @@
     <section class="bio-sidebar">
         <img alt="profile image" class="bio-sidebar-img" :src='picture'/>
         <h2 class="bio-sidebar-name">{{ name }}</h2>
-        <h3 class="bio-sidebar-bio-title">Background:</h3>
         <p class="bio-sidebar-bio">{{ bio }}<p/>
     </section>
 </template>
@@ -34,10 +33,6 @@ export default {
 
     .bio-sidebar-name, .bio-sidebar-bio-title, .bio-sidebar-bio {
         color: white;
-    }
-
-    .bio-sidebar-bio-title {
-        margin: 10px;
     }
 
     .bio-sidebar-bio {

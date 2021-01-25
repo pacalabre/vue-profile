@@ -1,7 +1,7 @@
 <template>
     <main class="main">
         <section v-show="isAddingExperience === false && isEditingExperience === false" class="experience-section">
-            <h1 class="experience=section-title">Experience</h1>
+            <h1 class="experience-section-title">Experience</h1>
             <ul class="experience-list">
                 <li class="experience-list-item" v-for="(role, index) in experience" :key="index">
                     <button class="experience-btn-edit" @click="editExperience(index)">edit</button>
@@ -174,7 +174,7 @@ export default {
         getYearEnd(str) {
             if(str.length === 5) {
                 return "Current"
-            } else if (str.length === 9) {
+            } else if (str.length > 5) {
                 return str.split('|')[1];
             }
         },
@@ -206,6 +206,10 @@ export default {
 .main {
     width: 100%;
     min-height: 100vh;
+}
+
+.experience-section-title {
+    font-size: 1.75rem;
 }
 
 .experience-section, .main {
@@ -317,6 +321,7 @@ export default {
 
 .form-btn:hover {
     background: #3089ff;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -2px rgba(0,0,0,.05);
 }
 
 .form-btn-cancel:hover {
