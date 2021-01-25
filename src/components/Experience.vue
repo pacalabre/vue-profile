@@ -115,7 +115,6 @@ export default {
         },
         yearStartMustBeFourDigitsAddExp: function () {
             return this.newExperience.yearStart.length !== 4;
-            
         },
         missingYearStartEditExp: function () {
             return this.selectedExperience.yearStart === "" ; 
@@ -160,14 +159,23 @@ export default {
         editExperience(index) {
             this.isEditingExperience = true;
             this.selectedIndex = index;
+            const yearStartStr = this.$props.experience[index].dates.substring(0,4);
+            const yearEndStr = this.getYearEnd(this.$props.experience[index].dates);
             this.selectedExperience = {
                 company: this.$props.experience[index].company,
                 dates: this.$props.experience[index].dates,
                 description: this.$props.experience[index].description,
                 id: this.$props.experience[index].id,
                 title: this.$props.experience[index].title,
-                yearStart:"",
-                yearEnd: "",
+                yearStart:yearStartStr,
+                yearEnd: yearEndStr,
+            }
+        },
+        getYearEnd(str) {
+            if(str.length === 5) {
+                return "Current"
+            } else if (str.length === 9) {
+                return str.split('|')[1];
             }
         },
         UpdateExperience(event){
