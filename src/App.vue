@@ -84,8 +84,6 @@ export default {
 
   h1,h2,h3,h4,h5,h6,a,button,p {
     font-family: 'Average Sans', sans-serif;
-    /* margin: 0;
-    padding: 0; */
   }
 
   input {

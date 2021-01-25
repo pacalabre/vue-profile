@@ -1,14 +1,14 @@
 <template>
     <main class="main">
         <section v-show="isAddingExperience === false && isEditingExperience === false" class="experience-section">
-            <h2 class="experience=section-title">Experience</h2>
+            <h1 class="experience=section-title">Experience</h1>
             <ul class="experience-list">
                 <li class="experience-list-item" v-for="(role, index) in experience" :key="index">
                     <button class="experience-btn-edit" @click="editExperience(index)">edit</button>
-                    <h3 class="experience-company">{{role.company}}</h3>
+                    <h2 class="experience-company">{{role.company}}</h2>
                     <div class="experience-title-dates-container">
-                        <h4>{{role.title}}</h4>
-                        <p>{{role.dates}}<span v-if="role.dates && role.dates.length === 5">Current</span></p>
+                        <p class="experience-role">{{role.title}}</p>
+                        <p class="experience-dates">{{role.dates}}<span v-if="role.dates && role.dates.length === 5">Current</span></p>
                     </div>
                     <p class="experience-description">{{role.description}}</p>
                 </li>
@@ -101,7 +101,7 @@ export default {
         },
         selectedExperience: {
             handler: function(after) {
-                this.selectedExperience.dates = `${after.yearStart}${after.yearEnd}`
+                this.selectedExperience.dates = `${after.yearStart}|${after.yearEnd}`
             },
             deep: true
         },
@@ -115,6 +115,7 @@ export default {
         },
         yearStartMustBeFourDigitsAddExp: function () {
             return this.newExperience.yearStart.length !== 4;
+            
         },
         missingYearStartEditExp: function () {
             return this.selectedExperience.yearStart === "" ; 
@@ -196,6 +197,7 @@ export default {
 
 .main {
     width: 100%;
+    min-height: 100vh;
 }
 
 .experience-section, .main {
@@ -215,7 +217,7 @@ export default {
     display: flex;
     flex-direction: column;
     list-style: none;
-    max-width: 700px;
+    max-width: 600px;
     background: white;
     margin: 20px;
     padding: 10px 25px;
@@ -225,17 +227,23 @@ export default {
 .experience-title-dates-container {
     display: flex;
     flex-direction: row;
-    align-items: center;
     justify-content: space-between;
 }
 
 .experience-company, .experience-description {
     text-align: left;
-    margin-bottom: 15px;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.experience-role, .experience-dates {
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 .experience-description {
-    margin-top: 15px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .experience-btn-edit {
