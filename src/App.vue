@@ -45,18 +45,17 @@ export default {
       this.userProfile.experience.push(newExperience);
       ProfileService.updateExperince(this.userProfile)
       .catch(err => {
-        console.log(err);
+        console.log("there was an error ", err);
       })
     },
     updateExperience(event) {
       this.userProfile.experience[this.updateIndexVal] = {...this.userProfile.experience[this.updateIndexVal], ...event};
       ProfileService.updateExperince(this.userProfile)
       .catch(err => {
-        console.log(err);
+        console.log("there was an error ", err);
       })
     },
     indexToUpdate(event) {
-      console.log(event);
       this.updateIndexVal = event;
     }
 

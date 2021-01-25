@@ -29,6 +29,8 @@
                 <span class="form-warning" v-else-if="formSubmitAttempt && yearStartMustBeFourDigitsAddExp">This field must contain 4 digits</span>
                 <label class="form-label">Year End</label>
                 <input v-model="newExperience.yearEnd"/>
+                <span class="form-warning" v-if="formSubmitAttempt && yearEndMustBeFourDigitsAddExp">If this field is filled out, it must contain 4 digits</span>
+                <span class="form-warning" v-else-if="formSubmitAttempt && yearEndNotNumsAddExp">Only Numbers are allowed</span>
                 <label class="form-label">Description</label>
                 <textarea v-model="newExperience.description"></textarea>
                 <div class="form-btn-container">
@@ -116,6 +118,12 @@ export default {
         yearStartMustBeFourDigitsAddExp: function () {
             return this.newExperience.yearStart.length !== 4;
         },
+        yearEndMustBeFourDigitsAddExp: function () {
+            return this.newExperience.yearEnd !== "" && this.newExperience.yearEnd.length !== 4;
+        },
+        yearEndNotNumsAddExp: function () {
+            return isNaN(this.newExperience.yearEnd); 
+        },
         missingYearStartEditExp: function () {
             return this.selectedExperience.yearStart === "" ; 
         },
@@ -132,7 +140,7 @@ export default {
         },
         saveNewExperience(event) {
             event.preventDefault();
-            if(this.missingYearStartAddExp || this.yearStartNotNumsAddExp || this.yearStartMustBeFourDigitsAddExp) {
+            if(this.missingYearStartAddExp || this.yearStartNotNumsAddExp || this.yearStartMustBeFourDigitsAddExp || this.yearEndMustBeFourDigitsAddExp || this.yearEndNotNumsAddExp) {
                 this.formSubmitAttempt = true;
                 return;
             }
@@ -325,8 +333,8 @@ export default {
 }
 
 .form-btn-cancel:hover {
-    background: #2573db;
-    border: #2573db solid thin;
+    background: #3089ff;
+    border: #3089ff solid thin;
     color: white;
 }
 
